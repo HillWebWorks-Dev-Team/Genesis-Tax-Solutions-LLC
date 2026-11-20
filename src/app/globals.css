@@ -1,26 +1,106 @@
 @import "tailwindcss";
 
 :root {
+  --brand-navy: #071b3a;
+  --brand-navy-light: #123057;
+  --brand-pink: #e91e82;
+  --brand-pink-dark: #c4126a;
+  --brand-pink-soft: #f7a8cf;
+  --brand-gold: #c99b55;
+  --brand-gold-light: #e0bd7d;
+  --brand-ivory: #faf7f4;
+  --brand-slate: #5b6575;
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #071b3a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand-navy: var(--brand-navy);
+  --color-brand-navy-light: var(--brand-navy-light);
+  --color-brand-pink: var(--brand-pink);
+  --color-brand-pink-dark: var(--brand-pink-dark);
+  --color-brand-pink-soft: var(--brand-pink-soft);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-gold-light: var(--brand-gold-light);
+  --color-brand-ivory: var(--brand-ivory);
+  --color-brand-slate: var(--brand-slate);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-script: var(--font-script);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--brand-pink) 25%, white);
+    color: var(--brand-navy);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand-pink);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+  }
+
+  .font-script {
+    font-family: var(--font-script), cursive;
+  }
+}
+
+@keyframes loading-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes loading-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@layer utilities {
+  .loading-spinner {
+    animation: loading-spinner-rotate 0.8s linear infinite;
+    will-change: transform;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *:not(.loading-spinner),
+  *:not(.loading-spinner)::before,
+  *:not(.loading-spinner)::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .loading-spinner {
+    animation: loading-spinner-rotate 0.8s linear infinite !important;
+  }
 }
