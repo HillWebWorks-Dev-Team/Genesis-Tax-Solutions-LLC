@@ -48,14 +48,14 @@ export function PageHero({
         className="absolute inset-0 bg-gradient-to-r from-brand-navy/55 via-brand-navy/25 to-transparent"
       />
 
-      <Container className="relative py-14 sm:py-16 lg:py-[4.5rem]">
+      <Container className="relative py-10 sm:py-16 lg:py-[4.5rem]">
         <div className="max-w-2xl">
-          <p className="flex items-center gap-3 text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-brand-gold">
+          <p className="flex items-center gap-3 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-brand-gold sm:text-[0.7rem] sm:tracking-[0.24em]">
             <span className="inline-block h-px w-8 bg-brand-gold" aria-hidden />
             {eyebrow}
           </p>
 
-          <h1 className="mt-4 font-display text-4xl leading-tight sm:text-5xl lg:text-[3.25rem]">
+          <h1 className="mt-3 font-display text-[1.85rem] leading-tight sm:mt-4 sm:text-5xl lg:text-[3.25rem]">
             {title}
           </h1>
 
@@ -80,8 +80,8 @@ export function PageHero({
           ) : null}
         </div>
 
-        <nav aria-label="Breadcrumb" className="mt-10">
-          <ol className="flex flex-wrap items-center gap-2 text-sm text-white/55">
+        <nav aria-label="Breadcrumb" className="mt-7 sm:mt-10">
+          <ol className="flex flex-wrap items-center gap-2 text-xs text-white/55 sm:text-sm">
             {crumbs.map((crumb, index) => {
               const isLast = index === crumbs.length - 1;
               return (

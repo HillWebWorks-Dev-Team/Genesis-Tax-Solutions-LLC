@@ -5,7 +5,7 @@ export function AnnouncementBar({ text }: { text: string }) {
 
   return (
     <div className="bg-brand-pink text-white">
-      <Container className="py-2 text-center text-[0.72rem] font-medium tracking-[0.08em] sm:text-xs sm:tracking-[0.12em]">
+      <Container className="px-3 py-2 text-center text-[0.68rem] font-medium leading-snug tracking-[0.04em] sm:text-xs sm:tracking-[0.12em]">
         {text}
       </Container>
     </div>

@@ -215,7 +215,7 @@ export function BookingForm({
     />
     <form
       action={formAction}
-      className="space-y-10"
+      className="space-y-8 sm:space-y-10"
       noValidate
       onSubmit={(event) => {
         setAttempted(true);
@@ -227,7 +227,7 @@ export function BookingForm({
       }}
     >
       <fieldset>
-        <legend className="font-display text-2xl text-brand-navy">
+        <legend className="font-display text-xl text-brand-navy sm:text-2xl">
           1. Choose a service
         </legend>
         <p className="mt-2 text-sm text-brand-slate">
@@ -274,7 +274,7 @@ export function BookingForm({
       </fieldset>
 
       <fieldset>
-        <legend className="font-display text-2xl text-brand-navy">
+        <legend className="font-display text-xl text-brand-navy sm:text-2xl">
           2. Pick a time
         </legend>
         <p className="mt-2 text-sm text-brand-slate">
@@ -415,7 +415,7 @@ export function BookingForm({
       </fieldset>
 
       <fieldset>
-        <legend className="font-display text-2xl text-brand-navy">
+        <legend className="font-display text-xl text-brand-navy sm:text-2xl">
           3. Your details
         </legend>
         <p className="mt-2 text-sm text-brand-slate">

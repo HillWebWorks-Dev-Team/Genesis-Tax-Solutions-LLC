@@ -39,35 +39,37 @@ export default async function AdminOverviewPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div>
-        <h2 className="font-display text-3xl text-brand-navy">Overview</h2>
+        <h2 className="font-display text-2xl text-brand-navy sm:text-3xl">
+          Overview
+        </h2>
         <p className="mt-2 text-sm text-brand-slate">
           Snapshot of website activity and booking requests.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         {stats.map((stat) => (
           <Link
             key={stat.label}
             href={stat.href}
-            className="border border-brand-navy/10 bg-white p-5 transition-colors hover:border-brand-pink/40"
+            className="border border-brand-navy/10 bg-white p-4 transition-colors hover:border-brand-pink/40 sm:p-5"
           >
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-navy/45">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-brand-navy/45 sm:text-xs sm:tracking-[0.16em]">
               {stat.label}
             </p>
-            <p className="mt-3 font-display text-4xl text-brand-navy">
+            <p className="mt-2 font-display text-3xl text-brand-navy sm:mt-3 sm:text-4xl">
               {stat.value}
             </p>
           </Link>
         ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <section className="border border-brand-navy/10 bg-white p-5">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
+        <section className="border border-brand-navy/10 bg-white p-4 sm:p-5">
           <div className="flex items-center justify-between gap-3">
-            <h3 className="font-display text-xl text-brand-navy">
+            <h3 className="font-display text-lg text-brand-navy sm:text-xl">
               Recent enquiries
             </h3>
             <Link
@@ -94,9 +96,9 @@ export default async function AdminOverviewPage() {
           </ul>
         </section>
 
-        <section className="border border-brand-navy/10 bg-white p-5">
+        <section className="border border-brand-navy/10 bg-white p-4 sm:p-5">
           <div className="flex items-center justify-between gap-3">
-            <h3 className="font-display text-xl text-brand-navy">
+            <h3 className="font-display text-lg text-brand-navy sm:text-xl">
               Upcoming appointments
             </h3>
             <Link
@@ -128,8 +130,8 @@ export default async function AdminOverviewPage() {
         </section>
       </div>
 
-      <section className="border border-brand-navy/10 bg-white p-5">
-        <h3 className="font-display text-xl text-brand-navy">
+      <section className="border border-brand-navy/10 bg-white p-4 sm:p-5">
+        <h3 className="font-display text-lg text-brand-navy sm:text-xl">
           Email &amp; SMS campaigns
         </h3>
         <p className="mt-2 text-sm text-brand-slate">

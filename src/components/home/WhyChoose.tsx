@@ -36,26 +36,26 @@ const features = [
 
 export function WhyChoose() {
   return (
-    <section className="bg-brand-ivory py-16 sm:py-20">
+    <section className="bg-brand-ivory py-12 sm:py-20">
       <Container>
         <SectionHeading
           eyebrow="Why Clients Choose Genesis"
           title="Service, Convenience & Trust You Can Count On"
           description="A premium client experience built around clarity, accessibility, and reliable follow-through."
         />
-        <ul className="mt-12 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <ul className="mt-8 grid gap-3 sm:mt-12 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
           {features.map(({ title, description, Icon }) => (
             <li
               key={title}
-              className="rounded-3xl border border-brand-pink/15 bg-white p-6 text-center shadow-sm"
+              className="rounded-2xl border border-brand-pink/15 bg-white p-4 text-left shadow-sm sm:rounded-3xl sm:p-6 sm:text-center"
             >
-              <span className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-pink/10 text-brand-pink">
-                <Icon className="h-6 w-6" aria-hidden />
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-pink/10 text-brand-pink sm:mx-auto sm:h-14 sm:w-14">
+                <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden />
               </span>
-              <h3 className="mt-5 font-display text-xl text-brand-navy">
+              <h3 className="mt-4 font-display text-lg text-brand-navy sm:mt-5 sm:text-xl">
                 {title}
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-brand-slate">
+              <p className="mt-2 text-sm leading-relaxed text-brand-slate sm:mt-3">
                 {description}
               </p>
             </li>

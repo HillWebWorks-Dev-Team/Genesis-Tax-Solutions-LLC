@@ -8,7 +8,7 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <div className="sticky top-0 z-50">
+      <div className="sticky top-0 z-50 bg-white">
         <AnnouncementBar text={content.announcement} />
         <Header />
       </div>

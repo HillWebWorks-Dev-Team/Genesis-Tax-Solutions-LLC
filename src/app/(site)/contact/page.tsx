@@ -26,25 +26,25 @@ export default async function ContactPage() {
         ]}
       />
 
-      <section className="bg-white py-16 sm:py-20">
-        <Container className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
+      <section className="bg-white py-10 sm:py-20">
+        <Container className="grid items-start gap-8 lg:grid-cols-2 lg:gap-16">
           <div>
-            <h2 className="font-display text-3xl text-brand-navy sm:text-4xl">
+            <h2 className="font-display text-2xl text-brand-navy sm:text-4xl">
               Office details
             </h2>
-            <p className="mt-5 max-w-md text-base leading-relaxed text-brand-slate sm:text-lg">
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-brand-slate sm:mt-5 sm:text-lg">
               Call, email, or send a message. Appointments are available in
               person and virtually.
             </p>
 
-            <div className="mt-10 grid gap-4 sm:grid-cols-2">
-              <article className="border border-brand-navy/10 bg-brand-ivory p-5 sm:p-6">
+            <div className="mt-8 grid gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4">
+              <article className="border border-brand-navy/10 bg-brand-ivory p-4 sm:p-6">
                 <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
                   Phone
                 </h3>
                 <a
                   href={`tel:${content.phoneTel}`}
-                  className="mt-3 inline-block text-lg text-brand-navy transition-colors hover:text-brand-pink"
+                  className="mt-3 inline-flex min-h-11 items-center text-lg text-brand-navy transition-colors hover:text-brand-pink"
                 >
                   {content.phoneDisplay}
                 </a>
@@ -53,23 +53,23 @@ export default async function ContactPage() {
                 </p>
               </article>
 
-              <article className="border border-brand-navy/10 bg-brand-ivory p-5 sm:p-6">
+              <article className="border border-brand-navy/10 bg-brand-ivory p-4 sm:p-6">
                 <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
                   Email
                 </h3>
                 <a
                   href={`mailto:${content.email}`}
-                  className="mt-3 inline-block break-all text-lg text-brand-navy transition-colors hover:text-brand-pink"
+                  className="mt-3 inline-block break-all text-base text-brand-navy transition-colors hover:text-brand-pink sm:text-lg"
                 >
                   {content.email}
                 </a>
               </article>
 
-              <article className="border border-brand-navy/10 bg-brand-ivory p-5 sm:col-span-2 sm:p-6">
+              <article className="border border-brand-navy/10 bg-brand-ivory p-4 sm:col-span-2 sm:p-6">
                 <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
                   Office
                 </h3>
-                <p className="mt-3 text-base text-brand-navy">
+                <p className="mt-3 text-sm text-brand-navy sm:text-base">
                   {content.address.line1}
                   <br />
                   {content.address.line2}
@@ -79,22 +79,22 @@ export default async function ContactPage() {
                 </p>
               </article>
 
-              <article className="border border-brand-navy/10 bg-brand-ivory p-5 sm:p-6">
+              <article className="border border-brand-navy/10 bg-brand-ivory p-4 sm:p-6">
                 <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
                   Mailing
                 </h3>
-                <p className="mt-3 text-base text-brand-navy">
+                <p className="mt-3 text-sm text-brand-navy sm:text-base">
                   {content.mailingAddress.line1}
                   <br />
                   {content.mailingAddress.line2}
                 </p>
               </article>
 
-              <article className="border border-brand-navy/10 bg-brand-ivory p-5 sm:p-6">
+              <article className="border border-brand-navy/10 bg-brand-ivory p-4 sm:p-6">
                 <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
                   Hours
                 </h3>
-                <p className="mt-3 text-base text-brand-navy">
+                <p className="mt-3 text-sm text-brand-navy sm:text-base">
                   By appointment
                 </p>
                 <p className="mt-1 text-sm text-brand-slate">
@@ -103,18 +103,18 @@ export default async function ContactPage() {
               </article>
             </div>
 
-            <div className="mt-10">
+            <div className="mt-8 sm:mt-10">
               <Link
                 href="/book-appointment/"
-                className="inline-flex items-center justify-center bg-brand-pink px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-pink-dark"
+                className="inline-flex w-full items-center justify-center bg-brand-pink px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-pink-dark sm:w-auto"
               >
                 Book an Appointment
               </Link>
             </div>
           </div>
 
-          <div className="bg-brand-ivory p-6 sm:p-8 lg:p-10">
-            <h2 className="font-display text-3xl text-brand-navy sm:text-4xl">
+          <div className="bg-brand-ivory p-4 sm:p-8 lg:p-10">
+            <h2 className="font-display text-2xl text-brand-navy sm:text-4xl">
               Send a message
             </h2>
             <p className="mt-4 text-base leading-relaxed text-brand-slate">

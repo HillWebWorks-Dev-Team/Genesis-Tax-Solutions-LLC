@@ -42,7 +42,7 @@ export function NewsletterSignup() {
   return (
     <section
       id="newsletter"
-      className="relative overflow-hidden bg-brand-ivory py-16 sm:py-20"
+      className="relative overflow-hidden bg-brand-ivory py-12 sm:py-20"
     >
       <div
         aria-hidden
@@ -58,7 +58,7 @@ export function NewsletterSignup() {
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-pink">
             Newsletter &amp; Updates
           </p>
-          <h2 className="mt-3 font-display text-3xl text-brand-navy sm:text-4xl">
+          <h2 className="mt-3 font-display text-[1.85rem] text-brand-navy sm:text-4xl">
             Stay Connected
           </h2>
           <p className="mt-4 text-base leading-relaxed text-brand-slate sm:text-lg">

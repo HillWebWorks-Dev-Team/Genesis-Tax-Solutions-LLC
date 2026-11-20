@@ -17,13 +17,13 @@ export async function AboutTeaser() {
     content.aboutPortraitImage || media.aboutPortrait.src;
 
   return (
-    <section className="bg-white py-16 sm:py-24">
-      <Container className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+    <section className="bg-white py-12 sm:py-24">
+      <Container className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
         <div className="order-2 lg:order-1">
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-brand-pink">
             About
           </p>
-          <h2 className="mt-4 font-display text-3xl leading-tight text-brand-navy sm:text-4xl lg:text-5xl">
+          <h2 className="mt-3 font-display text-[1.85rem] leading-tight text-brand-navy sm:mt-4 sm:text-4xl lg:text-5xl">
             Meet {content.ownerName}
           </h2>
           <p className="mt-2 text-base text-brand-slate sm:text-lg">
@@ -48,16 +48,16 @@ export async function AboutTeaser() {
             ))}
           </ul>
 
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mt-8 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:items-center">
             <Link
               href="/about/"
-              className="inline-flex items-center justify-center bg-brand-navy px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-navy-light"
+              className="inline-flex min-h-12 items-center justify-center bg-brand-navy px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-navy-light"
             >
               Learn More
             </Link>
             <Link
               href="/book-appointment/"
-              className="text-sm font-medium text-brand-navy underline decoration-brand-navy/20 underline-offset-4 transition-colors hover:text-brand-pink"
+              className="inline-flex min-h-11 items-center text-sm font-medium text-brand-navy underline decoration-brand-navy/20 underline-offset-4 transition-colors hover:text-brand-pink"
             >
               Book an appointment
             </Link>

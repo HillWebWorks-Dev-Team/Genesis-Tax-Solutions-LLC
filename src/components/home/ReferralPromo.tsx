@@ -25,7 +25,7 @@ const highlights = [
 export function ReferralPromo() {
   return (
     <section
-      className="bg-white py-16 sm:py-20"
+      className="bg-white py-12 sm:py-20"
       aria-labelledby="referral-heading"
     >
       <Container className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
@@ -35,7 +35,7 @@ export function ReferralPromo() {
           </p>
           <h2
             id="referral-heading"
-            className="mt-3 font-display text-3xl text-brand-navy sm:text-4xl"
+            className="mt-3 font-display text-[1.85rem] text-brand-navy sm:text-4xl"
           >
             Refer &amp; Earn with Genesis
           </h2>

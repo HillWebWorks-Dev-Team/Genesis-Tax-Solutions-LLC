@@ -31,46 +31,51 @@ export function Footer({ content }: { content: PublicContent }) {
   return (
     <footer>
       <div className="bg-brand-navy text-white">
-        <Container className="grid gap-10 py-14 sm:gap-12 lg:grid-cols-[1.15fr_0.85fr_0.85fr_1fr_1.15fr] lg:gap-8 xl:gap-10">
-          <div>
+        <Container className="grid gap-8 py-10 text-center sm:gap-10 sm:py-14 lg:grid-cols-[1.15fr_0.85fr_0.85fr_1fr_1.15fr] lg:gap-8 lg:text-left xl:gap-10">
+          <div className="flex flex-col items-center sm:col-span-2 lg:col-span-1 lg:items-start">
             <Logo variant="footer" tone="light" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/75">
               Professional tax preparation and notary services for individuals,
               families, and businesses.
             </p>
-            <SocialLinks className="mt-6" tone="light" />
+            <SocialLinks
+              className="mt-5 justify-center lg:justify-start [&_a]:h-10 [&_a]:w-10"
+              tone="light"
+            />
           </div>
 
-          <div>
-            <h3 className="text-sm font-bold text-brand-gold">Quick Links</h3>
-            <ul className="mt-4 space-y-2.5">
-              {quickLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/80 transition-colors hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <div className="grid grid-cols-2 gap-8 sm:contents">
+            <div>
+              <h3 className="text-sm font-bold text-brand-gold">Quick Links</h3>
+              <ul className="mt-4 space-y-2.5">
+                {quickLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-white/80 transition-colors hover:text-white"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div>
-            <h3 className="text-sm font-bold text-brand-gold">Resources</h3>
-            <ul className="mt-4 space-y-2.5">
-              {resourceLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/80 transition-colors hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div>
+              <h3 className="text-sm font-bold text-brand-gold">Resources</h3>
+              <ul className="mt-4 space-y-2.5">
+                {resourceLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-white/80 transition-colors hover:text-white"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div>
@@ -79,23 +84,23 @@ export function Footer({ content }: { content: PublicContent }) {
               <li>
                 <a
                   href={`tel:${content.phoneTel}`}
-                  className="inline-flex items-start gap-3 transition-colors hover:text-white"
+                  className="inline-flex min-h-11 items-start justify-center gap-3 transition-colors hover:text-white lg:justify-start"
                 >
                   <Phone className="mt-0.5 h-4 w-4 shrink-0 text-brand-gold" aria-hidden />
                   <span>{content.phoneDisplay}</span>
                 </a>
               </li>
-              <li className="inline-flex items-start gap-3">
+              <li className="flex items-start justify-center gap-3 lg:justify-start">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-gold" aria-hidden />
-                <span>
+                <span className="min-w-0 text-left">
                   {content.address.line1}
                   <br />
                   {content.address.line2}
                 </span>
               </li>
-              <li className="inline-flex items-start gap-3">
+              <li className="flex items-start justify-center gap-3 lg:justify-start">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-brand-gold" aria-hidden />
-                <span>
+                <span className="min-w-0 text-left">
                   {content.mailingAddress.line1}
                   <br />
                   {content.mailingAddress.line2}
@@ -104,7 +109,7 @@ export function Footer({ content }: { content: PublicContent }) {
             </ul>
           </div>
 
-          <div className="overflow-hidden rounded-2xl">
+          <div className="mx-auto w-full max-w-md overflow-hidden rounded-2xl lg:mx-0 lg:max-w-none">
             <Image
               src={media.footerJacksonville.src}
               alt={media.footerJacksonville.alt}
@@ -118,11 +123,11 @@ export function Footer({ content }: { content: PublicContent }) {
       </div>
 
       <div className="bg-[#6b1a3a] text-white">
-        <Container className="flex flex-col gap-3 py-4 text-xs text-white/90 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
+        <Container className="flex flex-col items-center gap-3 py-4 text-center text-xs text-white/90 sm:flex-row sm:items-center sm:justify-between sm:text-left sm:text-sm">
           <p className="m-0">
             © {year} {siteConfig.legalName}. All Rights Reserved.
           </p>
-          <ul className="m-0 flex list-none flex-wrap items-center gap-x-3 gap-y-2 p-0">
+          <ul className="m-0 flex list-none flex-wrap items-center justify-center gap-x-3 gap-y-2 p-0 sm:justify-end">
             <li>
               <Link href="/privacy-policy/" className="hover:text-white">
                 Privacy Policy

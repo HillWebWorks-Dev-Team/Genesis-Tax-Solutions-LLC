@@ -29,13 +29,13 @@ export default async function BookAppointmentPage() {
         ]}
       />
 
-      <section className="bg-brand-ivory py-14 sm:py-20">
-        <Container className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
-          <div className="bg-white p-6 sm:p-8 lg:p-10">
-            <h2 className="font-display text-3xl text-brand-navy sm:text-4xl">
+      <section className="bg-brand-ivory py-8 sm:py-20">
+        <Container className="grid items-start gap-6 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
+          <div className="bg-white p-4 sm:p-8 lg:p-10">
+            <h2 className="font-display text-2xl text-brand-navy sm:text-4xl">
               Request a time
             </h2>
-            <p className="mt-3 max-w-2xl text-base leading-relaxed text-brand-slate">
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-brand-slate sm:text-base">
               Fill out the short form below. We will follow up to confirm your
               appointment. No Social Security numbers or tax documents are needed
               here.

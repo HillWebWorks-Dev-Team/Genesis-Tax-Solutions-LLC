@@ -61,7 +61,7 @@ export default function RootLayout({
       lang="en"
       className={`${display.variable} ${body.variable} ${script.variable} h-full`}
     >
-      <body className="flex min-h-full flex-col antialiased">
+      <body className="flex min-h-full flex-col overflow-x-hidden antialiased">
         <Suspense fallback={<LoadingModal label="Loading" />}>
           <GlobalLoadingProvider>{children}</GlobalLoadingProvider>
         </Suspense>
