@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DeleteCustomerButton } from "@/components/admin/DeleteCustomerButton";
 import { prisma } from "@/lib/db";
 
 type SearchParams = Promise<{
@@ -128,12 +129,13 @@ export default async function AdminCustomersPage({
               <th className="px-4 py-3 font-semibold">Subscriptions</th>
               <th className="px-4 py-3 font-semibold">Activity</th>
               <th className="px-4 py-3 font-semibold">Updated</th>
+              <th className="px-4 py-3 font-semibold">Actions</th>
             </tr>
           </thead>
           <tbody>
             {customers.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-brand-slate">
+                <td colSpan={6} className="px-4 py-8 text-brand-slate">
                   No customers match this search.
                 </td>
               </tr>
@@ -174,6 +176,13 @@ export default async function AdminCustomersPage({
                     </td>
                     <td className="px-4 py-4 text-brand-slate">
                       {item.updatedAt.toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-4">
+                      <DeleteCustomerButton
+                        customerId={item.id}
+                        label={item.name}
+                        compact
+                      />
                     </td>
                   </tr>
                 );

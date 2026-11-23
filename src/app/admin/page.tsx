@@ -135,9 +135,11 @@ export default async function AdminOverviewPage() {
           Email &amp; SMS campaigns
         </h3>
         <p className="mt-2 text-sm text-brand-slate">
-          Campaign statistics and Mailchimp sync will appear here after the
-          Mailchimp integration phase. Subscriber records are already being
-          stored from the website signup form.
+          Send mass email or SMS from{" "}
+          <a href="/admin/campaigns/" className="text-brand-pink hover:underline">
+            Campaigns
+          </a>
+          . Website signups sync to Mailchimp when an email is provided.
         </p>
       </section>
     </div>

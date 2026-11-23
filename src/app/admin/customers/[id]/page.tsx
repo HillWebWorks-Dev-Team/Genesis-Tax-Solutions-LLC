@@ -87,7 +87,10 @@ export default async function AdminCustomerDetailPage({
             {customer.email || "No email"} · {customer.phone || "No phone"}
           </p>
         </div>
-        <DeleteCustomerButton customerId={customer.id} />
+        <DeleteCustomerButton
+          customerId={customer.id}
+          label={customer.name}
+        />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">

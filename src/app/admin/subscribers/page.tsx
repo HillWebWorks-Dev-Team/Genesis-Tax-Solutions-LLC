@@ -1,6 +1,9 @@
+import { DeleteSubscriberButton } from "@/components/admin/DeleteSubscriberButton";
 import { SyncSubscriberButton } from "@/components/admin/SyncSubscriberButton";
 import { isMailchimpConfigured } from "@/lib/mailchimp/client";
 import { prisma } from "@/lib/db";
+
+export const instant = false;
 
 export default async function AdminSubscribersPage() {
   const subscribers = await prisma.subscriber.findMany({
@@ -29,12 +32,13 @@ export default async function AdminSubscribersPage() {
               <th className="px-4 py-3 font-semibold">Preferences</th>
               <th className="px-4 py-3 font-semibold">Status</th>
               <th className="px-4 py-3 font-semibold">Mailchimp</th>
+              <th className="px-4 py-3 font-semibold">Actions</th>
             </tr>
           </thead>
           <tbody>
             {subscribers.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-brand-slate">
+                <td colSpan={6} className="px-4 py-8 text-brand-slate">
                   No subscribers yet.
                 </td>
               </tr>
@@ -73,6 +77,12 @@ export default async function AdminSubscribersPage() {
                       ) : (
                         <SyncSubscriberButton subscriberId={item.id} />
                       )}
+                    </td>
+                    <td className="px-4 py-4">
+                      <DeleteSubscriberButton
+                        subscriberId={item.id}
+                        label={item.email || item.phone || "this subscriber"}
+                      />
                     </td>
                   </tr>
                 );

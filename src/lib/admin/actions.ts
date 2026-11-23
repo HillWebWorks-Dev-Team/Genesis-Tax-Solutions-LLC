@@ -8,7 +8,14 @@ import {
   appointmentEmailCopy,
   sendEmail,
 } from "@/lib/email/send";
-import { upsertMailchimpSubscriber } from "@/lib/mailchimp/client";
+import {
+  createAndSendCampaign,
+  createAndSendSmsCampaign,
+  deleteMailchimpCampaign,
+  deleteMailchimpSmsCampaign,
+  upsertMailchimpSubscriber,
+} from "@/lib/mailchimp/client";
+import { siteConfig } from "@/lib/site-config";
 
 async function requireAdmin() {
   const session = await getSession();
@@ -127,6 +134,34 @@ export async function saveAppointmentAdminNotesAction(formData: FormData) {
   revalidatePath(`/admin/appointments/${id}`);
 }
 
+export async function deleteSubscriberAction(formData: FormData) {
+  const session = await requireAdmin();
+  const id = String(formData.get("id") || "");
+  if (!id) return { ok: false as const, error: "Missing subscriber." };
+
+  const subscriber = await prisma.subscriber.findUnique({ where: { id } });
+  if (!subscriber) return { ok: false as const, error: "Subscriber not found." };
+
+  await prisma.subscriber.delete({ where: { id } });
+
+  await prisma.auditLog.create({
+    data: {
+      action: "subscriber.delete",
+      actorId: session.sub,
+      meta: JSON.stringify({
+        id,
+        email: subscriber.email,
+        phone: subscriber.phone,
+      }),
+    },
+  });
+
+  revalidatePath("/admin/subscribers");
+  revalidatePath("/admin/campaigns");
+  revalidatePath("/admin");
+  return { ok: true as const };
+}
+
 export async function syncSubscriberToMailchimpAction(formData: FormData) {
   const session = await requireAdmin();
   const id = String(formData.get("id") || "");
@@ -197,5 +232,175 @@ export async function updateSiteSettingAction(formData: FormData) {
   });
   revalidatePath("/admin/content");
   revalidatePath("/", "layout");
+}
+
+export type CampaignActionResult = {
+  ok: boolean;
+  error?: string;
+  message?: string;
+  campaignId?: string;
+};
+
+export async function sendMassEmailCampaignAction(
+  _prev: CampaignActionResult,
+  formData: FormData,
+): Promise<CampaignActionResult> {
+  const session = await requireAdmin();
+
+  const subject = String(formData.get("subject") || "").trim();
+  const previewText = String(formData.get("previewText") || "").trim();
+  const body = String(formData.get("body") || "").trim();
+  const confirmed = String(formData.get("confirmSend") || "") === "on";
+
+  if (!subject || subject.length < 3) {
+    return { ok: false, error: "Enter a subject line." };
+  }
+  if (!body || body.length < 10) {
+    return { ok: false, error: "Enter a message for your audience." };
+  }
+  if (!confirmed) {
+    return {
+      ok: false,
+      error: "Check the confirmation box to send this email now.",
+    };
+  }
+
+  const result = await createAndSendCampaign({
+    subject,
+    body,
+    previewText: previewText || undefined,
+    fromName: siteConfig.brandName,
+    replyTo: siteConfig.email,
+    title: subject,
+  });
+
+  if (!result.ok) {
+    return {
+      ok: false,
+      error: result.error,
+      campaignId: "campaignId" in result ? result.campaignId : undefined,
+    };
+  }
+
+  await prisma.auditLog.create({
+    data: {
+      action: "campaign.mailchimp_send",
+      actorId: session.sub,
+      meta: JSON.stringify({
+        campaignId: result.campaignId,
+        subject,
+      }),
+    },
+  });
+
+  revalidatePath("/admin/campaigns");
+  return {
+    ok: true,
+    campaignId: result.campaignId,
+    message: "Campaign sent to your Mailchimp audience.",
+  };
+}
+
+export async function sendMassSmsCampaignAction(
+  _prev: CampaignActionResult,
+  formData: FormData,
+): Promise<CampaignActionResult> {
+  const session = await requireAdmin();
+
+  const name = String(formData.get("name") || "").trim();
+  const message = String(formData.get("message") || "").trim();
+  const listWebId = Number(formData.get("listWebId") || "");
+  const confirmed = String(formData.get("confirmSend") || "") === "on";
+
+  if (!name || name.length < 2) {
+    return { ok: false, error: "Enter an internal campaign name." };
+  }
+  if (!message || message.length < 5) {
+    return { ok: false, error: "Enter an SMS message." };
+  }
+  if (message.length > 320) {
+    return { ok: false, error: "SMS message must be 320 characters or fewer." };
+  }
+  if (!Number.isFinite(listWebId)) {
+    return { ok: false, error: "Missing Mailchimp audience id for SMS." };
+  }
+  if (!confirmed) {
+    return {
+      ok: false,
+      error: "Check the confirmation box to send this SMS now.",
+    };
+  }
+
+  const result = await createAndSendSmsCampaign({
+    name,
+    message,
+    listWebId,
+  });
+
+  if (!result.ok) {
+    return {
+      ok: false,
+      error: result.error,
+      campaignId: "campaignId" in result ? result.campaignId : undefined,
+    };
+  }
+
+  await prisma.auditLog.create({
+    data: {
+      action: "campaign.mailchimp_sms_send",
+      actorId: session.sub,
+      meta: JSON.stringify({
+        campaignId: result.campaignId,
+        name,
+      }),
+    },
+  });
+
+  revalidatePath("/admin/campaigns");
+  return {
+    ok: true,
+    campaignId: result.campaignId,
+    message: "SMS campaign sent to your Mailchimp SMS audience.",
+  };
+}
+
+export async function deleteEmailCampaignAction(formData: FormData) {
+  const session = await requireAdmin();
+  const id = String(formData.get("id") || "").trim();
+  if (!id) return { ok: false as const, error: "Missing campaign." };
+
+  const result = await deleteMailchimpCampaign(id);
+  if (!result.ok) return result;
+
+  await prisma.auditLog.create({
+    data: {
+      action: "campaign.mailchimp_delete",
+      actorId: session.sub,
+      meta: JSON.stringify({ campaignId: id }),
+    },
+  });
+
+  revalidatePath("/admin/campaigns");
+  return { ok: true as const };
+}
+
+export async function deleteSmsCampaignAction(formData: FormData) {
+  const session = await requireAdmin();
+  const id = String(formData.get("id") || "").trim();
+  if (!id) return { ok: false as const, error: "Missing SMS campaign." };
+
+  const result = await deleteMailchimpSmsCampaign(id);
+  if (!result.ok) return result;
+
+  await prisma.auditLog.create({
+    data: {
+      action: "campaign.mailchimp_sms_delete",
+      actorId: session.sub,
+      meta: JSON.stringify({ campaignId: id }),
+    },
+  });
+
+  revalidatePath("/admin/campaigns");
+  return { ok: true as const };
 }
 

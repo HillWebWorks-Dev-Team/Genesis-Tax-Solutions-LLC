@@ -1,22 +1,32 @@
+import { CampaignComposer } from "@/components/admin/CampaignComposer";
+import { CampaignRowActions } from "@/components/admin/CampaignRowActions";
+import { SmsCampaignComposer } from "@/components/admin/SmsCampaignComposer";
 import {
   getMailchimpStatus,
   listRecentCampaigns,
+  listRecentSmsCampaigns,
+  mailchimpCampaignAdminUrl,
 } from "@/lib/mailchimp/client";
 import { prisma } from "@/lib/db";
+import { siteConfig } from "@/lib/site-config";
+
+export const instant = false;
 
 export default async function AdminCampaignsPage() {
-  const [status, campaignsResult, subscriberCount] = await Promise.all([
-    getMailchimpStatus(),
-    listRecentCampaigns(),
-    prisma.subscriber.count({ where: { status: "active" } }),
-  ]);
+  const [status, campaignsResult, smsCampaignsResult, subscriberCount] =
+    await Promise.all([
+      getMailchimpStatus(),
+      listRecentCampaigns(),
+      listRecentSmsCampaigns(),
+      prisma.subscriber.count({ where: { status: "active" } }),
+    ]);
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="font-display text-3xl text-brand-navy">Campaigns</h2>
         <p className="mt-2 text-sm text-brand-slate">
-          Mailchimp email and SMS marketing status for this website.
+          Send mass email or SMS through Mailchimp and review recent results.
         </p>
       </div>
 
@@ -66,6 +76,36 @@ export default async function AdminCampaignsPage() {
         </article>
       </div>
 
+      {status.configured && status.connected ? (
+        <CampaignComposer
+          audienceName={status.audienceName}
+          memberCount={status.memberCount}
+          replyTo={siteConfig.email}
+        />
+      ) : (
+        <section className="border border-brand-navy/10 bg-white p-6 text-sm text-brand-slate">
+          Connect Mailchimp to send mass email from this page.
+        </section>
+      )}
+
+      {status.configured &&
+      status.connected &&
+      status.smsSupported &&
+      typeof status.audienceWebId === "number" ? (
+        <SmsCampaignComposer
+          audienceName={status.audienceName}
+          listWebId={status.audienceWebId}
+        />
+      ) : status.configured && status.connected ? (
+        <section className="border border-brand-navy/10 bg-white p-6 text-sm leading-relaxed text-brand-slate">
+          <h3 className="font-display text-xl text-brand-navy">Mass SMS</h3>
+          <p className="mt-3">
+            {status.smsMessage} Once Mailchimp SMS is fully enabled for this
+            account, send from this page.
+          </p>
+        </section>
+      ) : null}
+
       <section className="border border-brand-navy/10 bg-white p-6">
         <h3 className="font-display text-xl text-brand-navy">
           Recent email campaigns
@@ -79,8 +119,7 @@ export default async function AdminCampaignsPage() {
           <p className="mt-3 text-sm text-red-700">{campaignsResult.error}</p>
         ) : campaignsResult.campaigns.length === 0 ? (
           <p className="mt-3 text-sm text-brand-slate">
-            No campaigns found in Mailchimp yet. Create campaigns in Mailchimp,
-            or we can expand in-dashboard campaign creation next.
+            No campaigns found yet. Send your first mass email above.
           </p>
         ) : (
           <div className="mt-4 overflow-x-auto">
@@ -91,6 +130,7 @@ export default async function AdminCampaignsPage() {
                   <th className="px-2 py-3 font-semibold">Status</th>
                   <th className="px-2 py-3 font-semibold">Opens</th>
                   <th className="px-2 py-3 font-semibold">Clicks</th>
+                  <th className="px-2 py-3 font-semibold">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,6 +151,17 @@ export default async function AdminCampaignsPage() {
                     <td className="px-2 py-3 text-brand-slate">
                       {campaign.clicks}
                     </td>
+                    <td className="px-2 py-3">
+                      <CampaignRowActions
+                        campaignId={campaign.id}
+                        title={campaign.title}
+                        viewUrl={
+                          campaign.archiveUrl ||
+                          mailchimpCampaignAdminUrl(campaign.webId) ||
+                          undefined
+                        }
+                      />
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -119,15 +170,56 @@ export default async function AdminCampaignsPage() {
         )}
       </section>
 
-      {!status.smsSupported ? (
-        <section className="border border-brand-navy/10 bg-white p-6 text-sm leading-relaxed text-brand-slate">
-          <h3 className="font-display text-xl text-brand-navy">SMS note</h3>
-          <p className="mt-3">
-            SMS stays Mailchimp-only (no Twilio). If this account lacks an
-            approved US SMS program, create and send SMS campaigns inside
-            Mailchimp for now. Dashboard SMS create/send will unlock only after
-            the API reports SMS capability.
-          </p>
+      {status.smsSupported ? (
+        <section className="border border-brand-navy/10 bg-white p-6">
+          <h3 className="font-display text-xl text-brand-navy">
+            Recent SMS campaigns
+          </h3>
+          {smsCampaignsResult.ok === false ? (
+            <p className="mt-3 text-sm text-red-700">{smsCampaignsResult.error}</p>
+          ) : smsCampaignsResult.campaigns.length === 0 ? (
+            <p className="mt-3 text-sm text-brand-slate">
+              No SMS campaigns yet. Send your first mass SMS above.
+            </p>
+          ) : (
+            <div className="mt-4 overflow-x-auto">
+              <table className="min-w-full text-left text-sm">
+                <thead className="border-b border-brand-navy/10 text-xs uppercase tracking-[0.12em] text-brand-navy/55">
+                  <tr>
+                    <th className="px-2 py-3 font-semibold">Campaign</th>
+                    <th className="px-2 py-3 font-semibold">Status</th>
+                    <th className="px-2 py-3 font-semibold">Recipients</th>
+                    <th className="px-2 py-3 font-semibold">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {smsCampaignsResult.campaigns.map((campaign) => (
+                    <tr
+                      key={campaign.id}
+                      className="border-t border-brand-navy/8"
+                    >
+                      <td className="px-2 py-3 text-brand-navy">
+                        {campaign.title}
+                      </td>
+                      <td className="px-2 py-3 capitalize text-brand-slate">
+                        {campaign.status}
+                      </td>
+                      <td className="px-2 py-3 text-brand-slate">
+                        {campaign.recipients}
+                      </td>
+                      <td className="px-2 py-3">
+                        <CampaignRowActions
+                          campaignId={campaign.id}
+                          title={campaign.title}
+                          channel="sms"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       ) : null}
     </div>

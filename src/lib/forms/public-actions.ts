@@ -137,12 +137,21 @@ export async function submitSubscribeAction(
       where: { id: subscriber.id },
       data: { mailchimpMemberId: sync.memberId },
     });
+  } else if (!sync.ok) {
+    await prisma.auditLog.create({
+      data: {
+        action: "subscriber.mailchimp_sync_failed",
+        meta: JSON.stringify({
+          subscriberId: subscriber.id,
+          error: "error" in sync ? sync.error : "Mailchimp sync failed",
+        }),
+      },
+    });
   }
 
+  // Always show a visitor-friendly message. Sync failures stay in admin/audit.
   return {
     ok: true,
-    message: sync.ok
-      ? "Thanks for subscribing. Your preferences are saved."
-      : "Thanks for subscribing. Your preferences are saved locally. Mailchimp sync needs attention in admin.",
+    message: "Thanks for subscribing. Your preferences are saved.",
   };
 }

@@ -1,0 +1,137 @@
+"use client";
+
+import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useId, useState, useTransition } from "react";
+import {
+  deleteEmailCampaignAction,
+  deleteSmsCampaignAction,
+} from "@/lib/admin/actions";
+
+export function CampaignRowActions({
+  campaignId,
+  title,
+  viewUrl,
+  channel = "email",
+}: {
+  campaignId: string;
+  title: string;
+  viewUrl?: string;
+  channel?: "email" | "sms";
+}) {
+  const router = useRouter();
+  const titleId = useId();
+  const [open, setOpen] = useState(false);
+  const [pending, startTransition] = useTransition();
+  const [error, setError] = useState("");
+
+  function confirmDelete() {
+    startTransition(async () => {
+      const formData = new FormData();
+      formData.set("id", campaignId);
+      const result =
+        channel === "sms"
+          ? await deleteSmsCampaignAction(formData)
+          : await deleteEmailCampaignAction(formData);
+      if (!result.ok) {
+        setError(result.error || "Delete failed.");
+        return;
+      }
+      setOpen(false);
+      router.refresh();
+    });
+  }
+
+  return (
+    <>
+      <div className="flex items-center gap-3">
+        {viewUrl ? (
+          <a
+            href={viewUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs font-semibold uppercase tracking-[0.12em] text-brand-pink hover:text-brand-pink-dark"
+          >
+            View
+          </a>
+        ) : (
+          <span className="text-xs uppercase tracking-[0.12em] text-brand-navy/30">
+            View
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={() => {
+            setError("");
+            setOpen(true);
+          }}
+          disabled={pending}
+          className="text-xs font-semibold uppercase tracking-[0.12em] text-red-700 hover:text-red-800 disabled:opacity-60"
+        >
+          Delete
+        </button>
+      </div>
+
+      {open ? (
+        <div
+          className="fixed inset-0 z-[240] flex items-center justify-center bg-brand-navy/60 px-4 backdrop-blur-[2px]"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+          onClick={() => (pending ? null : setOpen(false))}
+        >
+          <div
+            className="w-full max-w-md border border-white/15 bg-brand-ivory p-6 shadow-[0_24px_80px_rgba(7,27,58,0.35)] animate-[loading-modal-in_280ms_ease-out]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <h3
+                id={titleId}
+                className="font-display text-2xl text-brand-navy"
+              >
+                Are you sure?
+              </h3>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                disabled={pending}
+                className="inline-flex h-9 w-9 items-center justify-center border border-brand-navy/15 text-brand-navy disabled:opacity-60"
+                aria-label="Close"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-brand-slate">
+              Delete{" "}
+              <strong className="text-brand-navy">{title}</strong> from
+              Mailchimp? This clears it from this list.
+            </p>
+            {error ? (
+              <p role="alert" className="mt-3 text-sm text-red-700">
+                {error}
+              </p>
+            ) : null}
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={confirmDelete}
+                disabled={pending}
+                className="inline-flex flex-1 items-center justify-center bg-red-700 px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-colors hover:bg-red-800 disabled:opacity-60"
+              >
+                {pending ? "Deleting..." : "Yes, delete"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                disabled={pending}
+                className="inline-flex flex-1 items-center justify-center border border-brand-navy/15 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-brand-navy transition-colors hover:border-brand-navy/35 disabled:opacity-60"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
+  );
+}

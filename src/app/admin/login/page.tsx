@@ -5,6 +5,8 @@ import { DatabaseUnavailable } from "@/components/admin/DatabaseUnavailable";
 import { loginAdminAction } from "@/lib/auth/actions";
 import { getAdminAccountState } from "@/lib/auth/admin";
 
+export const instant = false;
+
 export const metadata: Metadata = {
   title: "Admin Login",
   robots: { index: false, follow: false },
