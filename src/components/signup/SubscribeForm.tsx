@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { Check, Mail, MessageSquareText } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { LoadingModal } from "@/components/ui/LoadingModal";
 import {
   submitSubscribeAction,
   type PublicFormResult,
@@ -40,6 +41,7 @@ export function SubscribeForm({ className }: { className?: string }) {
 
   return (
     <form action={formAction} className={className} noValidate>
+      {pending ? <LoadingModal label="Saving your signup" /> : null}
       <div className="grid gap-3 sm:grid-cols-2">
         <button
           type="button"
