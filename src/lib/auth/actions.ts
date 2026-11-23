@@ -3,28 +3,19 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import {
-  changeAdminPassword,
-  createAdminFromSetupCode,
+  ensureAdminForAccessCodeLogin,
   getAdminAccountState,
-  getAdminById,
   isValidSetupCode,
-  verifyAdminCredentials,
 } from "@/lib/auth/admin";
 import {
   clearSessionCookie,
   createSessionToken,
-  getSession,
   setSessionCookie,
 } from "@/lib/auth/session";
 import { prisma } from "@/lib/db";
 
-const setupSchema = z.object({
-  setupCode: z.string().min(1),
-});
-
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
+const accessCodeSchema = z.object({
+  accessCode: z.string().min(1),
 });
 
 export type ActionResult = {
@@ -35,7 +26,7 @@ export type ActionResult = {
 const databaseUnavailable =
   "The database is unavailable. Try again in a moment.";
 
-export async function setupAdminAction(
+export async function loginAdminAction(
   _prev: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
@@ -43,69 +34,37 @@ export async function setupAdminAction(
   if (account === "unavailable") {
     return { ok: false, error: databaseUnavailable };
   }
-  if (account === "ready") {
-    return { ok: false, error: "Admin account already exists. Please sign in." };
-  }
 
-  const parsed = setupSchema.safeParse({
-    setupCode: formData.get("setupCode"),
+  const parsed = accessCodeSchema.safeParse({
+    accessCode: formData.get("accessCode") || formData.get("setupCode"),
   });
 
   if (!parsed.success) {
-    return { ok: false, error: "Enter the setup code." };
+    return { ok: false, error: "Enter the access code." };
   }
 
-  if (!isValidSetupCode(parsed.data.setupCode)) {
-    return { ok: false, error: "Invalid setup code." };
+  if (!isValidSetupCode(parsed.data.accessCode)) {
+    return { ok: false, error: "Invalid access code." };
   }
 
-  const user = await createAdminFromSetupCode();
-  await prisma.auditLog.create({
-    data: {
-      action: "admin.setup",
-      actorId: user.id,
-      meta: JSON.stringify({ email: user.email }),
-    },
-  });
-
-  const token = await createSessionToken({
-    sub: user.id,
-    email: user.email,
-    name: user.name,
-  });
-  await setSessionCookie(token);
-  redirect("/admin/settings/");
-}
-
-export async function loginAdminAction(
-  _prev: ActionResult,
-  formData: FormData,
-): Promise<ActionResult> {
-  const parsed = loginSchema.safeParse({
-    email: formData.get("email"),
-    password: formData.get("password"),
-  });
-
-  if (!parsed.success) {
-    return { ok: false, error: "Enter a valid email and password." };
-  }
-
-  let user: Awaited<ReturnType<typeof verifyAdminCredentials>>;
+  let user: Awaited<ReturnType<typeof ensureAdminForAccessCodeLogin>>;
   try {
-    user = await verifyAdminCredentials(
-      parsed.data.email,
-      parsed.data.password,
-    );
+    user = await ensureAdminForAccessCodeLogin();
   } catch (error) {
-    const account = await getAdminAccountState();
-    if (account === "unavailable") {
+    const state = await getAdminAccountState();
+    if (state === "unavailable") {
       return { ok: false, error: databaseUnavailable };
     }
     throw error;
   }
-  if (!user) {
-    return { ok: false, error: "Incorrect email or password." };
-  }
+
+  await prisma.auditLog.create({
+    data: {
+      action: "admin.login",
+      actorId: user.id,
+      meta: JSON.stringify({ method: "access_code" }),
+    },
+  });
 
   const token = await createSessionToken({
     sub: user.id,
@@ -116,61 +75,15 @@ export async function loginAdminAction(
   redirect("/admin/");
 }
 
+/** Kept for old bookmarks; same flow as login. */
+export async function setupAdminAction(
+  prev: ActionResult,
+  formData: FormData,
+): Promise<ActionResult> {
+  return loginAdminAction(prev, formData);
+}
+
 export async function logoutAdminAction() {
   await clearSessionCookie();
   redirect("/admin/login/");
-}
-
-export async function changePasswordAction(
-  _prev: ActionResult,
-  formData: FormData,
-): Promise<ActionResult> {
-  const session = await getSession();
-  if (!session) {
-    return { ok: false, error: "You must be signed in." };
-  }
-
-  const admin = await getAdminById(session.sub);
-  if (!admin) {
-    return { ok: false, error: "Admin not found." };
-  }
-
-  const nextPassword = String(formData.get("nextPassword") || "");
-  const confirmPassword = String(formData.get("confirmPassword") || "");
-  const currentPassword = String(formData.get("currentPassword") || "");
-
-  if (nextPassword.length < 8) {
-    return { ok: false, error: "New password must be at least 8 characters." };
-  }
-
-  if (nextPassword !== confirmPassword) {
-    return { ok: false, error: "New passwords do not match." };
-  }
-
-  if (!admin.mustChangePassword && !currentPassword) {
-    return { ok: false, error: "Enter your current password." };
-  }
-
-  const result = await changeAdminPassword(
-    session.sub,
-    currentPassword,
-    nextPassword,
-  );
-
-  if (!result.ok) {
-    return { ok: false, error: result.error };
-  }
-
-  await prisma.auditLog.create({
-    data: {
-      action: "admin.password_change",
-      actorId: session.sub,
-    },
-  });
-
-  if (admin.mustChangePassword) {
-    redirect("/admin/");
-  }
-
-  return { ok: true };
 }

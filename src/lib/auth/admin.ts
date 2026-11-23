@@ -49,59 +49,30 @@ export async function createAdminFromSetupCode() {
       name: siteConfig.ownerName,
       email: siteConfig.email.toLowerCase(),
       passwordHash,
-      mustChangePassword: true,
-    },
-  });
-}
-
-export async function getAdminById(id: string) {
-  return prisma.adminUser.findUnique({ where: { id } });
-}
-
-export async function verifyAdminCredentials(email: string, password: string) {
-  const user = await prisma.adminUser.findUnique({
-    where: { email: email.trim().toLowerCase() },
-  });
-  if (!user) return null;
-  if (user.mustChangePassword) return null;
-  const ok = await bcrypt.compare(password, user.passwordHash);
-  if (!ok) return null;
-  await prisma.adminUser.update({
-    where: { id: user.id },
-    data: { lastLoginAt: new Date() },
-  });
-  return user;
-}
-
-export async function setAdminPassword(userId: string, nextPassword: string) {
-  const passwordHash = await bcrypt.hash(nextPassword, 12);
-  return prisma.adminUser.update({
-    where: { id: userId },
-    data: {
-      passwordHash,
       mustChangePassword: false,
     },
   });
 }
 
-export async function changeAdminPassword(
-  userId: string,
-  currentPassword: string,
-  nextPassword: string,
-) {
-  const user = await prisma.adminUser.findUnique({ where: { id: userId } });
-  if (!user) return { ok: false as const, error: "Admin not found." };
+/** Ensure an admin row exists, then mark this login. Used by access-code auth. */
+export async function ensureAdminForAccessCodeLogin() {
+  const existing = await prisma.adminUser.findFirst({
+    orderBy: { createdAt: "asc" },
+  });
 
-  if (user.mustChangePassword) {
-    await setAdminPassword(userId, nextPassword);
-    return { ok: true as const };
+  if (existing) {
+    return prisma.adminUser.update({
+      where: { id: existing.id },
+      data: {
+        lastLoginAt: new Date(),
+        mustChangePassword: false,
+      },
+    });
   }
 
-  const matches = await bcrypt.compare(currentPassword, user.passwordHash);
-  if (!matches) {
-    return { ok: false as const, error: "Current password is incorrect." };
-  }
+  return createAdminFromSetupCode();
+}
 
-  await setAdminPassword(userId, nextPassword);
-  return { ok: true as const };
+export async function getAdminById(id: string) {
+  return prisma.adminUser.findUnique({ where: { id } });
 }

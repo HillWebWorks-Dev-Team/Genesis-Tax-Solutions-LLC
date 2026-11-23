@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { AuthField, AuthForm } from "@/components/admin/AuthForm";
 import { DatabaseUnavailable } from "@/components/admin/DatabaseUnavailable";
 import { loginAdminAction } from "@/lib/auth/actions";
 import { getAdminAccountState } from "@/lib/auth/admin";
-import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Admin Login",
@@ -17,9 +15,6 @@ export default async function AdminLoginPage() {
   if (account === "unavailable") {
     return <DatabaseUnavailable />;
   }
-  if (account === "missing") {
-    redirect("/admin/setup/");
-  }
 
   return (
     <div className="border border-brand-navy/10 bg-white p-6 sm:p-8">
@@ -28,23 +23,16 @@ export default async function AdminLoginPage() {
       </p>
       <h1 className="mt-2 font-display text-3xl text-brand-navy">Sign in</h1>
       <p className="mt-2 text-sm text-brand-slate">
-        Sign in with {siteConfig.email} and the password you created after setup.
+        Enter the access code to open the admin dashboard.
       </p>
       <div className="mt-8">
         <AuthForm action={loginAdminAction} submitLabel="Sign in">
           <AuthField
-            label="Email"
-            name="email"
-            type="email"
-            required
-            autoComplete="username"
-          />
-          <AuthField
-            label="Password"
-            name="password"
+            label="Access code"
+            name="accessCode"
             type="password"
             required
-            autoComplete="current-password"
+            autoComplete="one-time-code"
           />
         </AuthForm>
       </div>

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { AdminShellClient } from "@/components/admin/AdminShellClient";
-import { getAdminById } from "@/lib/auth/admin";
 import { getSession } from "@/lib/auth/session";
 
 export const instant = false;
@@ -28,12 +27,5 @@ export default async function AdminLayout({
     );
   }
 
-  const admin = await getAdminById(session.sub);
-  const mustChangePassword = Boolean(admin?.mustChangePassword);
-
-  return (
-    <AdminShellClient session={session} lockNav={mustChangePassword}>
-      {children}
-    </AdminShellClient>
-  );
+  return <AdminShellClient session={session}>{children}</AdminShellClient>;
 }
