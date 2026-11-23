@@ -28,7 +28,7 @@ function HeroIntro() {
 
       <p className="mt-4 text-sm leading-relaxed text-white/85 sm:mt-5 sm:text-base lg:max-w-[32rem]">
         Trusted, accurate, and convenient tax and notary solutions for
-        individuals, families, and businesses, with personalised service and
+        individuals, families, and businesses, with personalized service and
         year-round support.
       </p>
 

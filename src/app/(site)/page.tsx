@@ -29,7 +29,7 @@ export default async function HomePage() {
     url: "https://gtsnotarytax.com",
     telephone: content.phoneDisplay,
     email: content.email,
-    image: "https://gtsnotarytax.com/images/IMG_7541.png",
+    image: "https://gtsnotarytax.com/images/imgwithdog.jpg",
     address: {
       "@type": "PostalAddress",
       streetAddress: content.address.line1,

@@ -16,8 +16,8 @@ export const media = {
     alt: "Genesis Tax Solutions LLC footer logo",
   },
   heroPortrait: {
-    src: "/images/IMG_7541.png",
-    alt: "Maxcieen Telford seated in a navy chair",
+    src: "/images/imgwithdog.jpg",
+    alt: "Maxcieen Telford seated with her dog",
   },
   aboutPortrait: {
     src: "/images/IMG_7539.png",
