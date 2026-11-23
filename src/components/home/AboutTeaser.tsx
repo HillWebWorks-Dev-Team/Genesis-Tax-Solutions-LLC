@@ -48,18 +48,12 @@ export async function AboutTeaser() {
             ))}
           </ul>
 
-          <div className="mt-8 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:items-center">
+          <div className="mt-8 sm:mt-9">
             <Link
               href="/about/"
               className="inline-flex min-h-12 items-center justify-center bg-brand-navy px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-navy-light"
             >
               Learn More
-            </Link>
-            <Link
-              href="/book-appointment/"
-              className="inline-flex min-h-11 items-center text-sm font-medium text-brand-navy underline decoration-brand-navy/20 underline-offset-4 transition-colors hover:text-brand-pink"
-            >
-              Book an appointment
             </Link>
           </div>
         </div>

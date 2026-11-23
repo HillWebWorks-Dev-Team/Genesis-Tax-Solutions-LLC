@@ -5,8 +5,8 @@ import { z } from "zod";
 import {
   changeAdminPassword,
   createAdminFromSetupCode,
+  getAdminAccountState,
   getAdminById,
-  hasAdminUser,
   isValidSetupCode,
   verifyAdminCredentials,
 } from "@/lib/auth/admin";
@@ -32,11 +32,18 @@ export type ActionResult = {
   error?: string;
 };
 
+const databaseUnavailable =
+  "The database is unavailable. Try again in a moment.";
+
 export async function setupAdminAction(
   _prev: ActionResult,
   formData: FormData,
 ): Promise<ActionResult> {
-  if (await hasAdminUser()) {
+  const account = await getAdminAccountState();
+  if (account === "unavailable") {
+    return { ok: false, error: databaseUnavailable };
+  }
+  if (account === "ready") {
     return { ok: false, error: "Admin account already exists. Please sign in." };
   }
 
@@ -83,10 +90,19 @@ export async function loginAdminAction(
     return { ok: false, error: "Enter a valid email and password." };
   }
 
-  const user = await verifyAdminCredentials(
-    parsed.data.email,
-    parsed.data.password,
-  );
+  let user: Awaited<ReturnType<typeof verifyAdminCredentials>>;
+  try {
+    user = await verifyAdminCredentials(
+      parsed.data.email,
+      parsed.data.password,
+    );
+  } catch (error) {
+    const account = await getAdminAccountState();
+    if (account === "unavailable") {
+      return { ok: false, error: databaseUnavailable };
+    }
+    throw error;
+  }
   if (!user) {
     return { ok: false, error: "Incorrect email or password." };
   }

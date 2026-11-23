@@ -15,7 +15,7 @@ export default function NotaryServicesPage() {
       bullets={[
         "In-office & mobile notary options",
         "General notarial acts for eligible documents",
-        "Convenient appointment scheduling",
+        "Contact the office to arrange a time",
       ]}
       image={{
         src: media.notaryBanner.src,

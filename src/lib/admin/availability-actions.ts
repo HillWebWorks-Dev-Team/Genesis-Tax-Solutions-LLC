@@ -11,7 +11,7 @@ import { prisma } from "@/lib/db";
 function revalidateAvailability() {
   revalidateTag(AVAILABILITY_TAG, "max");
   revalidatePath("/admin/availability");
-  revalidatePath("/book-appointment");
+  revalidatePath("/contact");
 }
 
 async function requireAdmin() {

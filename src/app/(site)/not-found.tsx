@@ -9,8 +9,8 @@ export default function NotFound() {
       </p>
       <h1 className="font-display text-4xl text-brand-navy">Page not found</h1>
       <p className="max-w-lg text-brand-slate">
-        The page you requested is unavailable. Return home or book an
-        appointment from the main navigation.
+        The page you requested is unavailable. Return home or contact the
+        office from the main navigation.
       </p>
       <Button href="/">Back to Home</Button>
     </Container>

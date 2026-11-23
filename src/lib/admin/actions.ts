@@ -103,7 +103,7 @@ export async function updateAppointmentStatusAction(formData: FormData) {
   revalidatePath("/admin/appointments");
   revalidatePath(`/admin/appointments/${id}`);
   revalidatePath("/admin");
-  revalidatePath("/book-appointment");
+  revalidatePath("/contact");
 }
 
 export async function saveAppointmentAdminNotesAction(formData: FormData) {

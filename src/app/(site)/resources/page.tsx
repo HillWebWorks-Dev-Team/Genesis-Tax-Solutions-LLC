@@ -26,7 +26,7 @@ export default function ResourcesPage() {
         <div className="max-w-3xl text-brand-slate">
           <p>
             Browse current promotions and service highlights below. For
-            personalized guidance, book an appointment or contact the office.
+            personalized guidance, contact the office.
           </p>
         </div>
 

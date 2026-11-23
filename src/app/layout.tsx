@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.brandName}`,
   },
   description:
-    "Professional tax preparation and notary services in Jacksonville, FL. Book an appointment with Genesis Tax & Notary Solutions.",
+    "Professional tax preparation and notary services in Jacksonville, FL from Genesis Tax & Notary Solutions.",
   openGraph: {
     type: "website",
     locale: "en_US",

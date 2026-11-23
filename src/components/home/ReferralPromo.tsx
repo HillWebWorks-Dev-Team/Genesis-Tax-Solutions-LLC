@@ -17,7 +17,7 @@ const highlights = [
   },
   {
     title: "Clear program terms",
-    description: "Ask us for current details when you book or contact the office.",
+    description: "Ask the office for current program details.",
     Icon: ShieldCheck,
   },
 ];
@@ -28,7 +28,27 @@ export function ReferralPromo() {
       className="bg-white py-12 sm:py-20"
       aria-labelledby="referral-heading"
     >
-      <Container className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
+      <Container className="grid items-center gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
+        <div className="relative">
+          <div
+            aria-hidden
+            className="absolute -inset-3 rounded-[2rem] bg-brand-gold/15 blur-2xl"
+          />
+          <div className="relative overflow-hidden rounded-[1.75rem] border border-brand-navy/8 bg-brand-ivory shadow-[0_24px_60px_-34px_rgba(7,27,58,0.45)]">
+            <Image
+              src={media.referralPromo.src}
+              alt={media.referralPromo.alt}
+              width={1200}
+              height={800}
+              className="h-auto w-full object-contain"
+              sizes="(max-width: 1024px) 100vw, 480px"
+            />
+          </div>
+          <p className="mt-3 text-center text-xs text-brand-slate lg:text-left">
+            Program terms apply. Ask us for current qualifying details.
+          </p>
+        </div>
+
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-pink">
             Client Rewards
@@ -70,26 +90,6 @@ export function ReferralPromo() {
               Ask About Referring
             </Button>
           </div>
-        </div>
-
-        <div className="relative">
-          <div
-            aria-hidden
-            className="absolute -inset-3 rounded-[2rem] bg-brand-gold/15 blur-2xl"
-          />
-          <div className="relative overflow-hidden rounded-[1.75rem] border border-brand-navy/8 bg-brand-ivory shadow-[0_24px_60px_-34px_rgba(7,27,58,0.45)]">
-            <Image
-              src={media.referralPromo.src}
-              alt={media.referralPromo.alt}
-              width={1200}
-              height={800}
-              className="h-auto w-full object-contain"
-              sizes="(max-width: 1024px) 100vw, 480px"
-            />
-          </div>
-          <p className="mt-3 text-center text-xs text-brand-slate lg:text-left">
-            Program terms apply. Ask us for current qualifying details.
-          </p>
         </div>
       </Container>
     </section>

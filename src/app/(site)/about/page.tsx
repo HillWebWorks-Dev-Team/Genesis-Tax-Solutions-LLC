@@ -77,16 +77,10 @@ export default async function AboutPage() {
               </a>
             </div>
 
-            <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:items-center">
-              <Link
-                href="/book-appointment/"
-                className="inline-flex w-full items-center justify-center bg-brand-pink px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-pink-dark sm:w-auto"
-              >
-                Book an Appointment
-              </Link>
+            <div className="mt-8 sm:mt-10">
               <Link
                 href="/contact/"
-                className="inline-flex min-h-11 items-center justify-center text-sm font-medium text-brand-navy underline decoration-brand-navy/20 underline-offset-4 transition-colors hover:text-brand-pink sm:justify-start"
+                className="inline-flex w-full items-center justify-center bg-brand-pink px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-pink-dark sm:w-auto"
               >
                 Contact the office
               </Link>

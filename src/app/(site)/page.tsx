@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import { AboutTeaser } from "@/components/home/AboutTeaser";
-import { BookingCta } from "@/components/home/BookingCta";
 import { Hero } from "@/components/home/Hero";
 import { NewsletterSignup } from "@/components/home/NewsletterSignup";
 import { PromoBanner } from "@/components/home/PromoBanner";
 import { ReferralPromo } from "@/components/home/ReferralPromo";
+import { OfficeMap } from "@/components/home/OfficeMap";
 import { Services } from "@/components/home/Services";
-import { WhyChoose } from "@/components/home/WhyChoose";
 import { getPublicContent } from "@/lib/content/public-content";
 import { siteConfig } from "@/lib/site-config";
 
@@ -56,8 +55,7 @@ export default async function HomePage() {
       <PromoBanner content={content} />
       <Services />
       <AboutTeaser />
-      <WhyChoose />
-      <BookingCta />
+      <OfficeMap content={content} />
       <ReferralPromo />
       <NewsletterSignup />
     </>

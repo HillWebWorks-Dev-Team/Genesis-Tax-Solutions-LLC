@@ -44,13 +44,13 @@ const siteConfig = {
 const fields = [
   ["announcement", siteConfig.announcement],
   ["promo_enabled", "false"],
-  ["promo_heading", "Tax season appointments now open"],
+  ["promo_heading", "Tax season support is available"],
   [
     "promo_text",
-    "Book early for tax preparation, notary services, and year-round support.",
+    "Call or email for tax preparation, notary services, and year-round support.",
   ],
-  ["promo_link_label", "Book Appointment"],
-  ["promo_link_href", "/book-appointment/"],
+  ["promo_link_label", "Contact Us"],
+  ["promo_link_href", "/contact/"],
   ["promo_image", ""],
   ["phone_display", siteConfig.phoneDisplay],
   ["fax_display", siteConfig.faxDisplay],

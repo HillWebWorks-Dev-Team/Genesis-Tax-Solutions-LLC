@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { CalendarDays } from "lucide-react";
+import { Mail } from "lucide-react";
 import { PageHero } from "@/components/content/PageHero";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -47,9 +47,9 @@ export async function ServicePage({
                 </li>
               ))}
             </ul>
-            <Button href="/book-appointment/" size="lg">
-              <CalendarDays className="h-4 w-4" aria-hidden />
-              Book an Appointment
+            <Button href="/contact/" size="lg">
+              <Mail className="h-4 w-4" aria-hidden />
+              Contact Us
             </Button>
           </div>
 

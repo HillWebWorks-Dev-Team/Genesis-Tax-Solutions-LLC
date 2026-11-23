@@ -14,7 +14,7 @@ const quickLinks = [
   { label: "Tax Preparation", href: "/tax-preparation/" },
   { label: "Notary Services", href: "/notary-services/" },
   { label: "Business Support", href: "/business-support/" },
-  { label: "Book Appointment", href: "/book-appointment/" },
+  { label: "Contact", href: "/contact/" },
 ];
 
 const resourceLinks = [

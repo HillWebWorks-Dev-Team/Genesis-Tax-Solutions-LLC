@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthField, AuthForm } from "@/components/admin/AuthForm";
+import { DatabaseUnavailable } from "@/components/admin/DatabaseUnavailable";
 import { loginAdminAction } from "@/lib/auth/actions";
-import { hasAdminUser } from "@/lib/auth/admin";
+import { getAdminAccountState } from "@/lib/auth/admin";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -12,7 +13,11 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminLoginPage() {
-  if (!(await hasAdminUser())) {
+  const account = await getAdminAccountState();
+  if (account === "unavailable") {
+    return <DatabaseUnavailable />;
+  }
+  if (account === "missing") {
     redirect("/admin/setup/");
   }
 

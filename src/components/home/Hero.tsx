@@ -1,11 +1,5 @@
 import Image from "next/image";
-import {
-  CalendarDays,
-  Coins,
-  Mail,
-  MapPinned,
-  Smartphone,
-} from "lucide-react";
+import { Coins, Mail, MapPinned, Smartphone } from "lucide-react";
 import { SocialLinks } from "@/components/brand/SocialLinks";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -39,16 +33,7 @@ function HeroIntro() {
       </p>
 
       <div className="mt-6 flex flex-col gap-3 sm:mt-7 sm:flex-row sm:justify-center lg:justify-start">
-        <Button href="/book-appointment/" size="lg" className="w-full sm:w-auto">
-          <CalendarDays className="h-4 w-4" aria-hidden />
-          Book Appointment
-        </Button>
-        <Button
-          href="/contact/"
-          variant="outlineGold"
-          size="lg"
-          className="w-full sm:w-auto"
-        >
+        <Button href="/contact/" size="lg" className="w-full sm:w-auto">
           <Mail className="h-4 w-4" aria-hidden />
           Contact Us
         </Button>
@@ -138,17 +123,17 @@ export function Hero({ imageSrc }: { imageSrc?: string } = {}) {
     <section className="relative isolate overflow-hidden bg-brand-navy text-white">
       <HeroAtmosphere />
 
-      <Container className="relative grid items-center gap-6 py-8 sm:gap-10 sm:py-12 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto] lg:gap-x-8 lg:gap-y-8 lg:py-16 xl:gap-x-10">
-        <div className="lg:col-start-1 lg:row-start-1">
+      <Container className="relative grid items-center gap-5 py-8 sm:gap-10 sm:py-12 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto] lg:gap-x-8 lg:gap-y-8 lg:py-16 xl:gap-x-10">
+        <div className="order-1 lg:col-start-1 lg:row-start-1">
           <HeroIntro />
         </div>
 
-        <div className="lg:col-start-1 lg:row-start-2">
-          <HeroMeta />
+        <div className="order-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+          <HeroPortrait imageSrc={imageSrc} />
         </div>
 
-        <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
-          <HeroPortrait imageSrc={imageSrc} />
+        <div className="order-3 lg:col-start-1 lg:row-start-2">
+          <HeroMeta />
         </div>
       </Container>
     </section>

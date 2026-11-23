@@ -25,13 +25,12 @@ export default function PrivacyPolicyPage() {
         <p>
           {siteConfig.legalName} (&quot;we,&quot; &quot;us&quot;) respects your
           privacy. This policy explains how we handle information submitted
-          through our website forms, appointment requests, and marketing
-          signups.
+          through our website and marketing signups.
         </p>
         <h2>Information we collect</h2>
         <p>
-          Contact details you provide (such as name, email, phone, and message
-          content), appointment preferences, and marketing consent records.
+          Contact details you share with us (such as name, email, and phone)
+          and marketing consent records.
         </p>
         <h2>How we use information</h2>
         <p>

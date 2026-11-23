@@ -30,7 +30,7 @@ export const contentFields: ContentField[] = [
     key: "promo_heading",
     label: "Promo heading",
     section: "banners",
-    defaultValue: "Tax season appointments now open",
+    defaultValue: "Tax season support is available",
   },
   {
     key: "promo_text",
@@ -38,19 +38,19 @@ export const contentFields: ContentField[] = [
     section: "banners",
     rows: 3,
     defaultValue:
-      "Book early for tax preparation, notary services, and year-round support.",
+      "Call or email for tax preparation, notary services, and year-round support.",
   },
   {
     key: "promo_link_label",
     label: "Promo button label",
     section: "banners",
-    defaultValue: "Book Appointment",
+    defaultValue: "Contact Us",
   },
   {
     key: "promo_link_href",
     label: "Promo button link",
     section: "banners",
-    defaultValue: "/book-appointment/",
+    defaultValue: "/contact/",
   },
   {
     key: "promo_image",

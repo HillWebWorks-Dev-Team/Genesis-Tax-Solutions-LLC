@@ -26,10 +26,10 @@ export default function TermsPage() {
           provided for general information and does not create a client
           engagement until services are formally accepted.
         </p>
-        <h2>Appointments</h2>
+        <h2>Services</h2>
         <p>
-          Online booking requests are subject to confirmation. Availability is
-          not guaranteed until confirmed by {siteConfig.legalName}.
+          Service requests are confirmed directly by {siteConfig.legalName}.
+          Availability is not guaranteed until the office confirms it.
         </p>
         <h2>No sensitive uploads via public forms</h2>
         <p>

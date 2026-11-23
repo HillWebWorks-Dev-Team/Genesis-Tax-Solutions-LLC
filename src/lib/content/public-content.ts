@@ -56,6 +56,13 @@ function pick(
   return typeof value === "string" && value.trim() ? value : fallback;
 }
 
+function publicLink(href: string) {
+  if (href === "/book-appointment" || href === "/book-appointment/") {
+    return "/contact/";
+  }
+  return href;
+}
+
 export async function getContentMap() {
   "use cache";
   cacheTag(SITE_CONTENT_TAG);
@@ -81,18 +88,16 @@ export async function getPublicContent(): Promise<PublicContent> {
   return {
     announcement: pick(map, "announcement", siteConfig.announcement),
     promoEnabled: pick(map, "promo_enabled", "false") === "true",
-    promoHeading: pick(
-      map,
-      "promo_heading",
-      "Tax season appointments now open",
-    ),
+    promoHeading: pick(map, "promo_heading", "Tax season support is available"),
     promoText: pick(
       map,
       "promo_text",
-      "Book early for tax preparation, notary services, and year-round support.",
+      "Call or email for tax preparation, notary services, and year-round support.",
     ),
-    promoLinkLabel: pick(map, "promo_link_label", "Book Appointment"),
-    promoLinkHref: pick(map, "promo_link_href", "/book-appointment/"),
+    promoLinkLabel: pick(map, "promo_link_label", "Contact Us"),
+    promoLinkHref: publicLink(
+      pick(map, "promo_link_href", "/contact/"),
+    ),
     promoImage: pick(map, "promo_image", ""),
     phoneDisplay: pick(map, "phone_display", siteConfig.phoneDisplay),
     phoneTel: phoneTelFromDisplay(

@@ -3,9 +3,8 @@
 import { useEffect, useId, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarDays, ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, Phone, X } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
-import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { siteConfig } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
@@ -85,14 +84,13 @@ export function Header() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-2">
-            <Button
-              href="/book-appointment/"
-              size="sm"
-              className="hidden px-3.5 sm:inline-flex"
+            <a
+              href={`tel:${siteConfig.phoneTel}`}
+              className="hidden items-center gap-2 rounded-full bg-brand-pink px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-pink-dark sm:inline-flex"
             >
-              <CalendarDays className="h-4 w-4" aria-hidden />
-              Book Now
-            </Button>
+              <Phone className="h-4 w-4" aria-hidden />
+              Call
+            </a>
             <button
               type="button"
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-navy/10 text-brand-navy lg:hidden"
@@ -162,10 +160,6 @@ export function Header() {
             );
           })}
           <div className="mt-4 grid gap-2">
-            <Button href="/book-appointment/" className="w-full">
-              <CalendarDays className="h-4 w-4" aria-hidden />
-              Book Appointment
-            </Button>
             <a
               href={`tel:${siteConfig.phoneTel}`}
               className="inline-flex w-full items-center justify-center rounded-full border border-brand-navy/15 px-6 py-3 text-sm font-semibold text-brand-navy transition-colors hover:border-brand-pink hover:text-brand-pink"

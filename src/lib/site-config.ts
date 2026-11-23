@@ -47,7 +47,6 @@ export const siteConfig = {
       ],
     },
     { label: "About", href: "/about/" },
-    { label: "Book Appointment", href: "/book-appointment/" },
     { label: "Contact", href: "/contact/" },
   ],
   services: [

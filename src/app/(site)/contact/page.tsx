@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ContactForm } from "@/components/contact/ContactForm";
+import { Mail, Mailbox, MapPin, Phone, Printer } from "lucide-react";
+import { SocialLinks } from "@/components/brand/SocialLinks";
 import { PageHero } from "@/components/content/PageHero";
 import { Container } from "@/components/ui/Container";
 import { getPublicContent } from "@/lib/content/public-content";
@@ -8,122 +8,114 @@ import { getPublicContent } from "@/lib/content/public-content";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Contact Genesis Tax & Notary Solutions in Jacksonville, FL by phone, email, or message.",
+    "Phone, fax, email, and office details for Genesis Tax & Notary Solutions in Jacksonville, FL.",
 };
 
 export default async function ContactPage() {
   const content = await getPublicContent();
+
+  const methods: Array<{
+    label: string;
+    icon: typeof Phone;
+    value: string;
+    href?: string;
+    note?: string;
+  }> = [
+    {
+      label: "Phone",
+      icon: Phone,
+      value: content.phoneDisplay,
+      href: `tel:${content.phoneTel}`,
+    },
+    {
+      label: "Fax",
+      icon: Printer,
+      value: content.faxDisplay,
+    },
+    {
+      label: "Email",
+      icon: Mail,
+      value: content.email,
+      href: `mailto:${content.email}`,
+    },
+    {
+      label: "Office",
+      icon: MapPin,
+      value: `${content.address.line1}, ${content.address.line2}`,
+      note: content.address.note,
+    },
+    {
+      label: "Mailing address",
+      icon: Mailbox,
+      value: `${content.mailingAddress.line1}, ${content.mailingAddress.line2}`,
+    },
+  ];
 
   return (
     <>
       <PageHero
         eyebrow="Contact"
         title="Get in Touch"
-        description="Reach out by phone, email, or the form below. We will respond as soon as we can."
+        description="Call, fax, email, or visit the Jacksonville office."
         breadcrumbs={[
           { label: "Home", href: "/" },
           { label: "Contact" },
         ]}
       />
 
-      <section className="bg-white py-10 sm:py-20">
-        <Container className="grid items-start gap-8 lg:grid-cols-2 lg:gap-16">
-          <div>
-            <h2 className="font-display text-2xl text-brand-navy sm:text-4xl">
-              Office details
+      <section className="bg-white py-10 sm:py-16">
+        <Container className="max-w-3xl">
+          <ul className="divide-y divide-brand-navy/10 border border-brand-navy/10 bg-brand-ivory">
+            {methods.map((method) => {
+              const Icon = method.icon;
+              const body = (
+                <>
+                  <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-brand-pink">
+                    <Icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
+                      {method.label}
+                    </span>
+                    <span className="mt-1 block text-base text-brand-navy sm:text-lg">
+                      {method.value}
+                    </span>
+                    {method.note ? (
+                      <span className="mt-1 block text-sm text-brand-slate">
+                        {method.note}
+                      </span>
+                    ) : null}
+                  </span>
+                </>
+              );
+
+              return (
+                <li key={method.label}>
+                  {method.href ? (
+                    <a
+                      href={method.href}
+                      className="flex items-start gap-4 px-4 py-5 transition-colors hover:bg-white sm:px-6"
+                    >
+                      {body}
+                    </a>
+                  ) : (
+                    <div className="flex items-start gap-4 px-4 py-5 sm:px-6">
+                      {body}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="mt-8 border border-brand-navy/10 px-4 py-5 sm:px-6">
+            <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
+              Social
             </h2>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-brand-slate sm:mt-5 sm:text-lg">
-              Call, email, or send a message. Appointments are available in
-              person and virtually.
-            </p>
-
-            <div className="mt-8 grid gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4">
-              <article className="border border-brand-navy/10 bg-brand-ivory p-4 sm:p-6">
-                <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
-                  Phone
-                </h3>
-                <a
-                  href={`tel:${content.phoneTel}`}
-                  className="mt-3 inline-flex min-h-11 items-center text-lg text-brand-navy transition-colors hover:text-brand-pink"
-                >
-                  {content.phoneDisplay}
-                </a>
-                <p className="mt-1 text-sm text-brand-slate">
-                  Fax: {content.faxDisplay}
-                </p>
-              </article>
-
-              <article className="border border-brand-navy/10 bg-brand-ivory p-4 sm:p-6">
-                <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
-                  Email
-                </h3>
-                <a
-                  href={`mailto:${content.email}`}
-                  className="mt-3 inline-block break-all text-base text-brand-navy transition-colors hover:text-brand-pink sm:text-lg"
-                >
-                  {content.email}
-                </a>
-              </article>
-
-              <article className="border border-brand-navy/10 bg-brand-ivory p-4 sm:col-span-2 sm:p-6">
-                <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
-                  Office
-                </h3>
-                <p className="mt-3 text-sm text-brand-navy sm:text-base">
-                  {content.address.line1}
-                  <br />
-                  {content.address.line2}
-                </p>
-                <p className="mt-2 text-sm text-brand-slate">
-                  {content.address.note}
-                </p>
-              </article>
-
-              <article className="border border-brand-navy/10 bg-brand-ivory p-4 sm:p-6">
-                <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
-                  Mailing
-                </h3>
-                <p className="mt-3 text-sm text-brand-navy sm:text-base">
-                  {content.mailingAddress.line1}
-                  <br />
-                  {content.mailingAddress.line2}
-                </p>
-              </article>
-
-              <article className="border border-brand-navy/10 bg-brand-ivory p-4 sm:p-6">
-                <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
-                  Hours
-                </h3>
-                <p className="mt-3 text-sm text-brand-navy sm:text-base">
-                  By appointment
-                </p>
-                <p className="mt-1 text-sm text-brand-slate">
-                  Contact us for availability
-                </p>
-              </article>
-            </div>
-
-            <div className="mt-8 sm:mt-10">
-              <Link
-                href="/book-appointment/"
-                className="inline-flex w-full items-center justify-center bg-brand-pink px-7 py-3.5 text-xs font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-brand-pink-dark sm:w-auto"
-              >
-                Book an Appointment
-              </Link>
-            </div>
-          </div>
-
-          <div className="bg-brand-ivory p-4 sm:p-8 lg:p-10">
-            <h2 className="font-display text-2xl text-brand-navy sm:text-4xl">
-              Send a message
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-brand-slate">
-              Tell us what you need and the best way to reach you. We will
-              follow up shortly.
-            </p>
-            <div className="mt-8">
-              <ContactForm />
-            </div>
+            <SocialLinks
+              tone="dark"
+              className="mt-4 justify-start [&_a]:h-11 [&_a]:w-11"
+            />
           </div>
         </Container>
       </section>

@@ -7,7 +7,6 @@ const routes = [
   "/business-support/",
   "/irs-tax-support/",
   "/about/",
-  "/book-appointment/",
   "/contact/",
   "/resources/",
   "/privacy-policy/",
