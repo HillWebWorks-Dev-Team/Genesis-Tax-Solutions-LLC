@@ -55,20 +55,13 @@ export function SignupPopup() {
         >
           <X className="h-5 w-5" />
         </button>
-        <p className="pr-10 text-xs font-semibold uppercase tracking-[0.22em] text-brand-pink">
-          Updates
-        </p>
         <h2
           id={titleId}
-          className="mt-2 pr-10 font-display text-3xl text-brand-navy"
+          className="pr-10 font-display text-3xl text-brand-navy"
         >
-          Sign up for email or text
+          Join email list
         </h2>
-        <p className="mt-3 text-sm leading-relaxed text-brand-slate">
-          Get tax reminders, filing deadlines, and office updates. Choose email,
-          SMS, or both.
-        </p>
-        <SubscribeForm className="mt-5" />
+        <SubscribeForm variant="popup" className="mt-5" />
       </div>
     </div>
   );

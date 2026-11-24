@@ -1,3 +1,4 @@
+import { AppointmentInquiry } from "@/components/home/AppointmentInquiry";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Container } from "@/components/ui/Container";
 import {
@@ -41,6 +42,7 @@ export async function Services() {
         />
 
         <ServicesCarousel services={slides} />
+        <AppointmentInquiry />
       </Container>
     </section>
   );

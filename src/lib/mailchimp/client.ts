@@ -125,6 +125,7 @@ export async function getMailchimpStatus(): Promise<MailchimpStatus> {
 export async function upsertMailchimpSubscriber(input: {
   email?: string | null;
   phone?: string | null;
+  name?: string | null;
   emailOptIn: boolean;
   smsOptIn: boolean;
   preferences?: string[];
@@ -148,6 +149,9 @@ export async function upsertMailchimpSubscriber(input: {
   const mergeFields: Record<string, string> = {};
   if (input.phone) {
     mergeFields.PHONE = input.phone;
+  }
+  if (input.name?.trim()) {
+    mergeFields.FNAME = input.name.trim();
   }
 
   const body: Record<string, unknown> = {
@@ -204,7 +208,11 @@ function mailchimpErrorMessage(json: unknown, fallback: string) {
   return fallback;
 }
 
-function plainTextToCampaignHtml(body: string, subject: string) {
+function plainTextToCampaignHtml(
+  body: string,
+  subject: string,
+  footer = "You received this email because you subscribed to updates.",
+) {
   const paragraphs = body
     .trim()
     .split(/\n{2,}/)
@@ -225,6 +233,10 @@ function plainTextToCampaignHtml(body: string, subject: string) {
     .join("");
 
   const safeSubject = subject
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  const safeFooter = footer
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
@@ -250,7 +262,7 @@ function plainTextToCampaignHtml(body: string, subject: string) {
             <tr>
               <td style="padding:0 28px 28px;font-size:13px;line-height:1.5;color:#6b7280;">
                 <p style="margin:0;">Genesis Tax Solutions LLC · Jacksonville, FL</p>
-                <p style="margin:8px 0 0;">You received this email because you subscribed to updates.</p>
+                <p style="margin:8px 0 0;">${safeFooter}</p>
               </td>
             </tr>
           </table>
@@ -373,6 +385,164 @@ export async function createAndSendCampaign(input: {
     ok: true as const,
     campaignId,
   };
+}
+
+async function campaignRecipientCount(
+  config: MailchimpConfig,
+  campaignId: string,
+) {
+  const check = await mailchimpFetch(config, `/campaigns/${campaignId}`);
+  if (!check.response.ok) return undefined;
+  const data = check.json as {
+    recipients?: { recipient_count?: number };
+  };
+  return data.recipients?.recipient_count;
+}
+
+export async function sendSingleRecipientNotification(input: {
+  to: string;
+  subject: string;
+  text: string;
+  fromName: string;
+  replyTo: string;
+}) {
+  const config = getConfig();
+  if (!config) {
+    return {
+      ok: false as const,
+      skipped: true as const,
+      error: "Mailchimp is not configured.",
+    };
+  }
+
+  const to = input.to.trim().toLowerCase();
+  const subject = input.subject.trim();
+  const text = input.text.trim();
+  const fromName = input.fromName.trim();
+  const replyTo = input.replyTo.trim();
+
+  if (!to || !subject || !text || !fromName || !replyTo) {
+    return {
+      ok: false as const,
+      error: "Notification email is missing a recipient or message.",
+    };
+  }
+
+  const sync = await upsertMailchimpSubscriber({
+    email: to,
+    emailOptIn: true,
+    smsOptIn: false,
+  });
+  if (!sync.ok) {
+    return { ok: false as const, error: sync.error };
+  }
+
+  const create = await mailchimpFetch(config, "/campaigns", {
+    method: "POST",
+    body: JSON.stringify({
+      type: "regular",
+      recipients: {
+        list_id: config.audienceId,
+        segment_opts: {
+          match: "all",
+          conditions: [
+            {
+              condition_type: "EmailAddress",
+              field: "EMAIL",
+              op: "is",
+              value: to,
+            },
+          ],
+        },
+      },
+      settings: {
+        subject_line: subject,
+        title: subject,
+        from_name: fromName,
+        reply_to: replyTo,
+        auto_footer: true,
+        inline_css: true,
+      },
+    }),
+  });
+
+  if (!create.response.ok) {
+    return {
+      ok: false as const,
+      error: mailchimpErrorMessage(
+        create.json,
+        `Could not create notification (${create.response.status}).`,
+      ),
+    };
+  }
+
+  const campaignId = (create.json as { id?: string }).id;
+  if (!campaignId) {
+    return {
+      ok: false as const,
+      error: "Mailchimp created a notification without an id.",
+    };
+  }
+
+  let recipientCount = await campaignRecipientCount(config, campaignId);
+  if (recipientCount === 0) {
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    recipientCount = await campaignRecipientCount(config, campaignId);
+  }
+
+  if (recipientCount !== 1) {
+    await deleteMailchimpCampaign(campaignId);
+    return {
+      ok: false as const,
+      error: `Notification was not sent. Mailchimp matched ${recipientCount ?? "an unknown number of"} recipients.`,
+    };
+  }
+
+  const content = await mailchimpFetch(
+    config,
+    `/campaigns/${campaignId}/content`,
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        html: plainTextToCampaignHtml(
+          text,
+          subject,
+          "Appointment request from the Genesis Tax Solutions website.",
+        ),
+        plain_text: text,
+      }),
+    },
+  );
+
+  if (!content.response.ok) {
+    await deleteMailchimpCampaign(campaignId);
+    return {
+      ok: false as const,
+      error: mailchimpErrorMessage(
+        content.json,
+        `Notification content failed (${content.response.status}).`,
+      ),
+    };
+  }
+
+  const send = await mailchimpFetch(
+    config,
+    `/campaigns/${campaignId}/actions/send`,
+    { method: "POST" },
+  );
+
+  if (!send.response.ok && send.response.status !== 204) {
+    await deleteMailchimpCampaign(campaignId);
+    return {
+      ok: false as const,
+      error: mailchimpErrorMessage(
+        send.json,
+        `Notification send failed (${send.response.status}).`,
+      ),
+    };
+  }
+
+  return { ok: true as const, campaignId };
 }
 
 export async function listRecentCampaigns(count = 6) {

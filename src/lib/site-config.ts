@@ -14,6 +14,7 @@ export const siteConfig = {
   phoneTel: "+19049308065",
   faxDisplay: "(904) 664-8180",
   email: "gtsolutions@pm.me",
+  notifyEmail: "gtsolutions@protonmail.com",
   // Suite E301 per client brief (live site currently shows Suite 301 - pending confirmation)
   address: {
     line1: "7052 103rd St, Suite E301",

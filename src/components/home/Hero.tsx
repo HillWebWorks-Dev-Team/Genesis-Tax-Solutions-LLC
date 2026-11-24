@@ -1,7 +1,6 @@
 import Image from "next/image";
-import { Coins, Mail, MapPinned, Smartphone } from "lucide-react";
+import { Coins, MapPinned, Smartphone } from "lucide-react";
 import { SocialLinks } from "@/components/brand/SocialLinks";
-import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { media } from "@/lib/media";
 import { siteConfig } from "@/lib/site-config";
@@ -26,19 +25,17 @@ function HeroIntro() {
         </span>
       </h1>
 
-      <p className="mt-4 text-sm leading-relaxed text-white/85 sm:mt-5 sm:text-base lg:max-w-[32rem]">
-        Trusted, accurate, and convenient tax and notary solutions for
-        individuals, families, and businesses, with personalized service and
-        year-round support.
-      </p>
-
-      <div className="mt-6 flex flex-col gap-3 sm:mt-7 sm:flex-row sm:justify-center lg:justify-start">
-        <Button href="/contact/" size="lg" className="w-full sm:w-auto">
-          <Mail className="h-4 w-4" aria-hidden />
-          Contact Us
-        </Button>
-      </div>
     </div>
+  );
+}
+
+function HeroSummary() {
+  return (
+    <p className="mx-auto max-w-xl text-center text-sm leading-relaxed text-white/85 sm:text-base lg:mx-0 lg:max-w-[32rem] lg:text-left">
+      Trusted, accurate, and convenient tax and notary solutions for
+      individuals, families, and businesses, with personalized service and
+      year-round support.
+    </p>
   );
 }
 
@@ -123,16 +120,20 @@ export function Hero({ imageSrc }: { imageSrc?: string } = {}) {
     <section className="relative isolate overflow-hidden bg-brand-navy text-white">
       <HeroAtmosphere />
 
-      <Container className="relative grid items-center gap-5 py-8 sm:gap-10 sm:py-12 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto] lg:gap-x-8 lg:gap-y-8 lg:py-16 xl:gap-x-10">
+      <Container className="relative grid items-center gap-5 py-8 sm:gap-10 sm:py-12 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto_auto] lg:gap-x-8 lg:gap-y-8 lg:py-16 xl:gap-x-10">
         <div className="order-1 lg:col-start-1 lg:row-start-1">
           <HeroIntro />
         </div>
 
-        <div className="order-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+        <div className="order-2 lg:col-start-2 lg:row-span-3 lg:row-start-1">
           <HeroPortrait imageSrc={imageSrc} />
         </div>
 
         <div className="order-3 lg:col-start-1 lg:row-start-2">
+          <HeroSummary />
+        </div>
+
+        <div className="order-4 lg:col-start-1 lg:row-start-3">
           <HeroMeta />
         </div>
       </Container>
